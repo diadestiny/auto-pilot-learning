@@ -11,6 +11,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  message_generation
+  actionlib_msgs 
+  actionlib
 )
 
 ## System dependencies are found with CMake's conventions
@@ -102,10 +105,17 @@ find_package(catkin REQUIRED COMPONENTS
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
+
+add_message_files(FILES Person.msg)
+add_service_files(FILES AddTwoInts.srv)
+add_action_files(DIRECTORY action FILES DoDishes.action)
+generate_messages(DEPENDENCIES std_msgs actionlib_msgs)
+
+
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES learning_communication
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+   CATKIN_DEPENDS roscpp rospy std_msgs message_runtime
 #  DEPENDS system_lib
 )
 
@@ -140,6 +150,23 @@ target_link_libraries(talker ${catkin_LIBRARIES})
 add_executable(listener src/listener.cpp)
 target_link_libraries(listener ${catkin_LIBRARIES})
 #add_dependencies(listener ${PROJECT_NAME}_generate_messages_cpp)
+
+add_executable(server src/server.cpp)
+target_link_libraries(server ${catkin_LIBRARIES})
+add_dependencies(server ${PROJECT_NAME}_gencpp)
+
+add_executable(client src/client.cpp)
+target_link_libraries(client ${catkin_LIBRARIES})
+add_dependencies(client ${PROJECT_NAME}_gencpp)
+
+add_executable(DoDishes_client src/DoDishes_client.cpp)
+target_link_libraries( DoDishes_client ${catkin_LIBRARIES})
+add_dependencies(DoDishes_client ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
+add_executable(DoDishes_server src/DoDishes_server.cpp)
+target_link_libraries( DoDishes_server ${catkin_LIBRARIES})
+add_dependencies(DoDishes_server ${${PROJECT_NAME}_EXPORTED_TARGETS})
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
