@@ -1,0 +1,8 @@
+prefix=/home/lin/catkin_ws/install
+
+Name: lesson4_homework
+Description: Description of lesson4_homework
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/lin/catkin_ws/install/lib 
+Requires: 
